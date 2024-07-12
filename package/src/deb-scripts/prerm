@@ -1,0 +1,2 @@
+systemctl disable vdriver.service 2>/dev/null
+systemctl stop vdriver.service 2>/dev/null

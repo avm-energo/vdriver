@@ -1,0 +1,9 @@
+Source: vdriver
+Priority: optional
+Maintainer: AVM-Energo <support@avmenergo.ru>
+Section: embedded
+
+Package: vdriver
+Description: Virtual Com driver for connection with i-7188-E5
+Architecture: amd64
+Depends: ${shlibs:Depends}
