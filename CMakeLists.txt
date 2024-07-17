@@ -27,7 +27,6 @@ configure_file(${CMAKE_SOURCE_DIR}/cconfig.h.in ${CMAKE_CURRENT_BINARY_DIR}/conf
 add_executable(vdriver
     ${files_cpp}
     ${files_h}
-    src/serviceparser.h src/serviceparser.cpp
 )
 target_link_libraries(vdriver Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Network gen gitversion)
 

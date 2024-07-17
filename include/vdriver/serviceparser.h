@@ -10,6 +10,10 @@ public:
     explicit ServiceParser(QObject *parent = nullptr);
 
 signals:
+    void writeToSocket(const QByteArray &ba);
+
+public slots:
+    void newDataReceivedFromSocket(QByteArray &ba);
 };
 
 #endif // SERVICEPARSER_H
