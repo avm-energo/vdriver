@@ -11,7 +11,7 @@ class TCPServer : public QObject
 public:
     TCPServer(int port, QObject *parent = nullptr);
 
-    bool start(QHostAddress address = QHostAddress::Any);
+    bool start(QHostAddress address = QHostAddress::AnyIPv4);
     void setName(const QString &name);
 
 public slots:

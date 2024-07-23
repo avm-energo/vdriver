@@ -11,6 +11,8 @@ TCPServer::TCPServer(int port, QObject *parent)
 bool TCPServer::start(QHostAddress address)
 {
     if (!m_server->listen(address, m_port)) {
+ //   if (!m_server->listen(QHostAddress::AnyIPv4, m_port)) {
+
         qDebug() << m_name << "Unable to start the server: " << m_server->errorString();
         return false;
     }

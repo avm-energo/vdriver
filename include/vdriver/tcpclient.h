@@ -13,6 +13,8 @@ public:
     bool init(const QString &ip, int port);
     void setName(const QString &name);
 
+    bool status;
+
 public slots:
     void writeData(const QByteArray &ba);
 

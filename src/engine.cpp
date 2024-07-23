@@ -20,10 +20,10 @@ void Engine::init(Settings &settings)
     connect(parser, &ServiceParser::writeToSocket, m_server, &TCPServer::writeData);
     m_server->start();
 
-    // создаём клиенты
+    // создаём
     foreach (auto deviceDescr, settings.deviceList()) {
         Device *dev = new Device();
-        if (!dev->init(deviceDescr)) {
+         if (!dev->init(deviceDescr)) {
             qCritical() << "Cannot initialize device " << deviceDescr.ip << ":"
                         << deviceDescr.startPort;
         }
