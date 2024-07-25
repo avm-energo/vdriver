@@ -67,7 +67,7 @@ void Settings::readDevSettings(const QString &confFile)
         qWarning() << "Device described in file " + confFile + " has wrong Port setting";
         return;
     }
-    for (int i = 0; i < Defaults::maxDevPortsCount; ++i) {
+    for (int i = 1; i < Defaults::maxDevPortsCount; ++i) {
         PortStruct port;
         QString portname = "Port" + QString::number(i);
         port.use = (settings->value(portname, "No").toString() == "No") ? false : true;

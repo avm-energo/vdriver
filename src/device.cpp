@@ -20,7 +20,7 @@ Device::~Device()
 bool Device::init(Settings::DeviceStruct &device)
 {
     int currentPort = device.startPort;
-    int startRTUPort = 10000;
+    int startRTUPort = 10001;
     foreach (auto port, device.ports)
     {
         if(port.use)
@@ -38,9 +38,10 @@ bool Device::init(Settings::DeviceStruct &device)
             m_serverList.append(server);
             connect(client, &TCPClient::newDataReady, parser, &DeviceParser::newDataReceivedFromRTU);
             connect(parser, &DeviceParser::writeToRTU, client, &TCPClient::writeData);
-            client->init(device.ip, startRTUPort++);
+            client->init(device.ip, startRTUPort);
             m_clientList.append(client);
         }
+        ++startRTUPort;
         ++currentPort;
     }
     return true;

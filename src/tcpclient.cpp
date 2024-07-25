@@ -28,6 +28,7 @@ bool TCPClient::init(const QString &ip, int port)
     connect(m_socket, &QAbstractSocket::connected, this, &TCPClient::socketConnected);
     connect(m_socket, &QAbstractSocket::disconnected, this, &TCPClient::socketDisconnected);
     setName(ip + ":" + QString::number(port));
+    qDebug() << "Connecting to host: " << ip << ":" << port;
     m_socket->connectToHost(ip, port);
     return true;
 }
@@ -61,6 +62,7 @@ void TCPClient::errorOccured(QAbstractSocket::SocketError error)
     default:
         qCritical() << m_name << "The following error occurred: " << m_socket->errorString();
     }
+    m_reconnectTimer->start();
 }
 
 void TCPClient::newDataReceived()
@@ -69,26 +71,29 @@ void TCPClient::newDataReceived()
         qCritical() << m_name << "Socket is null";
         return;
     }
-    m_in.startTransaction();
-    QByteArray ba;
-    m_in >> ba;
-    if (!m_in.commitTransaction())
-        return;
+//    m_in.startTransaction();
+    QByteArray ba = m_socket->readAll();
+//    m_in >> ba;
+//    if (!m_in.commitTransaction())
+//        return;
     emit newDataReady(ba);
 }
 
 void TCPClient::socketConnected()
 {
+    qDebug() << "Host connected: " << m_name ;
     status = true;
 }
 
 void TCPClient::socketDisconnected()
 {
     status = false;
+    qDebug() << "Host disconnected: " << m_name << ", retrying in 15 sec";
     m_reconnectTimer->start();
 }
 
 void TCPClient::itsTimeToReconnect()
 {
+    qDebug() << "Reconnecting to host: " << m_name;
     m_socket->connectToHost(m_ip, m_port);
 }

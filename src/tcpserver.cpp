@@ -36,6 +36,8 @@ void TCPServer::writeData(const QByteArray &ba)
 void TCPServer::clientTryingToConnect()
 {
     m_clientConnection = m_server->nextPendingConnection();
+    qDebug() << "TCP Client trying to connect: " << m_clientConnection->peerAddress().toString() <<
+                ":" << m_clientConnection->localPort();
     connect(m_clientConnection,
             &QAbstractSocket::disconnected,
             m_clientConnection,
