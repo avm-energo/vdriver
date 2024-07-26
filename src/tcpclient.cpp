@@ -23,7 +23,11 @@ bool TCPClient::init(const QString &ip, int port)
     m_ip = ip;
     m_port = port;
     connect(m_socket, &QAbstractSocket::readyRead, this, &TCPClient::newDataReceived);
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+    connect(m_socket, &QAbstractSocket::error, this, &TCPClient::errorOccured);
+#else
     connect(m_socket, &QAbstractSocket::errorOccurred, this, &TCPClient::errorOccured);
+#endif
     connect(m_socket, &QAbstractSocket::connected, this, &TCPClient::socketConnected);
     connect(m_socket, &QAbstractSocket::disconnected, this, &TCPClient::socketDisconnected);
     setName(ip + ":" + QString::number(port));
