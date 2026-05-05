@@ -2,7 +2,7 @@ include(FetchContent)
 
 FetchContent_Declare(
   gen
-  GIT_REPOSITORY git@github.com:avm-energo/avm-gen.git
+  GIT_REPOSITORY https://github.com/avm-energo/avm-gen.git
   GIT_TAG        main
 )
 
