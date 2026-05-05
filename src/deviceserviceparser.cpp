@@ -12,12 +12,9 @@ DeviceServiceParser::DeviceServiceParser(TCPClient *client,
 
 void DeviceServiceParser::start(void) {
   QByteArray ba2;
-  // ba2.data()[0] ="" '1'";
   ba2.append('0');
   ba2.append('1');
 
-  //  ba2.append(0x0d);
-  qsizetype len = ba2.size();
   stepinitport = 0;
   initcurport = 0;
   emit writeToService(ba2);
@@ -25,16 +22,10 @@ void DeviceServiceParser::start(void) {
 
 void DeviceServiceParser::newDataReceived(QByteArray &ba) {
   QByteArray ba2, ba3, ba4;
-  char b[30], b2[30], np;
-  uint baud, databit, parity, stopbit;
+  char np;
   int i;
-  qsizetype num, num2;
+  qsizetype num;
   bool fl;
-  qsizetype len = ba.size();
-  qsizetype len2;
-  for (i = 0; i < len; i++) {
-    b[i] = ba.data()[i];
-  }
 
   switch (stepinitport) {
   case 0:
@@ -55,22 +46,6 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
           initcurport = i;
           getportstatus(i);
 
-          //         ba2.append('1');
-          //         ba2.append('6');
-          //         np=0x30+i;
-          //         ba2.append(np);
-          /*
-              ba2.setNum(16);
-              ba3.setNum(i);
-              ba2 = ba2 + ba3;
-              b[0] = ba2.data()[0];
-              b[1] = ba2.data()[1];
-              b[2] = ba2.data()[2];
-
-              len2 = ba2.size();
-
-              emit writeToService(ba2);
-          */
           return;
         } else
           noerr = false;
@@ -92,27 +67,17 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
     ba2.append(',');
     ba3.setNum(m_deviceSettings.ports[initcurport - 1].stopbit);
     ba2 = ba2 + ba3;
-    //   ba2.append(0x0D);
-
-    len2 = ba2.size();
-
-    for (i = 0; i < len2; i++) {
-      b2[i] = ba2.data()[i];
-    }
 
     ba.chop(1);
-    //  stopbit = m_deviceSettings.ports[initcurport - 1].stopbit;
-    //   parity = m_deviceSettings.ports[initcurport - 1].parity;
+
     qInfo() << "  IP  " << m_deviceSettings.ip << " Com Port" << initcurport
             << " status  " << ba;
 
-    //        qWarning
     if (ba == ba2) {
       initcurport++;
       for (i = initcurport; i < 6; i++) {
         if (m_deviceSettings.ports[i - 1].use) {
           if (checkintport(initcurport)) {
-            //               stepinitport++;
             initcurport = i;
             getportstatus(initcurport);
             return;
@@ -133,16 +98,7 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
       num = ba.indexOf(",");
       ba3 = ba.sliced(num + 1);
       ba4.clear();
-      num2 = ba2.indexOf(",");
       ba4 = ba2.sliced(num + 1);
-      len = ba3.size();
-      len2 = ba4.size();
-      for (i = 0; i < len; i++) {
-        b[i] = ba3.data()[i];
-      }
-      for (i = 0; i < len2; i++) {
-        b2[i] = ba4.data()[i];
-      }
 
       if (ba3 != ba4)
         isdataformat = true;
@@ -150,14 +106,7 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
       ba3.setNum(m_deviceSettings.ports[initcurport - 1].speed);
       ba4.clear();
       ba4 = ba.first(num);
-      len = ba3.size();
-      len2 = ba4.size();
-      for (i = 0; i < len; i++) {
-        b[i] = ba3.data()[i];
-      }
-      for (i = 0; i < len2; i++) {
-        b2[i] = ba4.data()[i];
-      }
+
       if (ba3 != ba4) {
         if (isdataformat)
           stepinitport = 3;
@@ -170,38 +119,6 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
         stepinitport = 0;
       }
     }
-
-    //      if (ba.data()[0] == 'O' && ba.data()[1] == 'K') {
-    /*
-        num = ba.indexOf(",");
-        if (num < 1) {
-          initcurport = 0;
-          return;
-        }
-
-        ba2 = ba.first(num);
-        //     ba2=ba.sliced(0,1);
-        baud = ba2.toUInt(&fl);
-        if (!baud) {
-          initcurport = 0;
-          return;
-        }
-
-        num2 = ba.indexOf(",", num + 1);
-        if ((num2 - num) != 2) {
-          initcurport = 0;
-          return;
-        }
-        ba2 = ba.sliced(num + 1, 1);
-
-        b[14] = ba2.data()[0];
-        len2 = ba2.size();
-
-        stopbit = m_deviceSettings.ports[initcurport].stopbit;
-        parity = m_deviceSettings.ports[initcurport].parity;
-        ;
-        //      }
-    */
     break;
 
   case 3:
@@ -219,16 +136,6 @@ void DeviceServiceParser::newDataReceived(QByteArray &ba) {
 
     break;
   };
-  /*
-    b[0] = ba.data()[0];
-    b[1] = ba.data()[1];
-    b[2] = ba.data()[2];
-    b[3] = ba.data()[3];
-    b[4] = ba.data()[4];
-    b[5] = ba.data()[5];
-    b[6] = ba.data()[6];
-*/
-  b[7] = ba.data()[7];
 }
 
 void DeviceServiceParser::getportstatus(int &np) {
